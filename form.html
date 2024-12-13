@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+</head>
+<style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      /* Background image settings */
+      background-image: url('https://images.unsplash.com/photo-1704728803508-7ab5e3846263?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGxpZ2h0JTIwZm9vZHxlbnwwfHwwfHx8MA%3D%3D'); /* Replace with your image URL */
+      background-size: cover; /* Make the image cover the entire area */
+      background-repeat: no-repeat; /* Prevent the image from repeating */
+      background-attachment: fixed; /* Fix the background image */
+      background-position: center; /* Center the image */
+    }
+
+    /* Example content */
+    .content {
+      height: 200vh; /* Add height to create a scroll effect */
+      padding: 20px;
+    }
+  </style>
+<body>
+    <div style="margin-left: 150px;">
+<div id="orderForm" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeOrderForm()">&times;</span>
+        <h2>Order Form</h2>
+        <form id="orderFormDetails" action="index.php" method="POST">
+<label for="name">item_name</label><br>
+<input type="text" id="item_name" name="item_name" required style="width: 300px;"><br><br>
+
+<label for="name">name</label><br>
+<input type="text" id="name" name="name" required style="width: 300px;"><br><br>
+
+<label for="email"> email</label><br>
+<input type="email" id="email" name="email" required style="width: 300px;"><br><br>
+
+<label for="table_num">Table_Num </label><br>
+<input type="number" id="table_num" name="table_num"min="1" max="10" required style="width: 300px;"><br><br>
+
+<label for="quantity">quantity (1-10)</label><br>
+<input type="numbrer" id="quantity" name="quantity" min="1" max="10" required style="width: 300px;"><br><br>
+
+Total Price: Rs:total_price<br><br>
+
+<label for="payment_method" style="height: 50px;width: 100px;">Payment Method:</label><br>
+<select id="payment_method" name="payment_method" required>
+<option value="cash">Cash</option>
+<option value="card">Card</option>
+<option value="phonepay">PhonePay</option>
+<option value="googlepay">Google Pay</option>
+</select><br><br>
+
+<button type="submit" style="width: 150px; height: 30px; background-color: hsl(136, 20%, 63%)">SUBMIT</button>
+</form>
+</div>
+    </div>
+</div>
+
+<script>
+    
+    
+    // Function to open the order form modal
+    function openOrderForm() {
+        modal.style.display = "block";
+    }
+    // Function to close the order form modal
+    function closeOrderForm() {
+        modal.style.display = "none";
+    }
+    // Function to calculate total price based on quantity
+    function calculateTotalPrice() {
+      const itemPrice = parseFloat(document.getElementById("item_price").value); // Assuming you have an input for item price
+      const quantity = parseInt(document.getElementById("quantity").value);
+
+      // Input validation (optional)
+      if (isNaN(itemPrice) || itemPrice <= 0) {
+        alert("Please enter a valid item price (positive number).");
+        return;
+      }
+
+      if (isNaN(quantity) || quantity < 1 || quantity > 10) {
+        alert("Please enter a valid quantity (between 1 and 10).");
+        return;
+      }
+
+      const totalPrice = itemPrice * quantity;
+      document.getElementById("total_price").textContent = totalPrice.toFixed(2); // Format to two decimal places
+    }
+
+
+    // Event listener for quantity change
+    document.getElementById("quantity").addEventListener("input", calculateTotal);
+
+    
+
+    // Function to generate a QR code
+    function generateQRCode(data) {
+        qrCodeElement.innerHTML = ""; // Clear any existing QR code
+        new QRCode(qrCodeElement, {
+            text: data,
+            width: 200,
+            height: 200,
+        });
+    }
+
+    
+    // Function to submit the order
+    function submitOrder() {
+        let form = document.getElementById("orderFormDetails");
+        let paymentMethod = document.getElementById("paymentMethod").value;
+        let isFormValid = form.checkValidity();
+
+        if (paymentMethod === "phonepay") {
+            // If PhonePay is selected, prompt to scan QR code
+            alert("Please scan the QR code to complete your payment before submitting.");
+            return; // Stop further execution
+        }
+
+        if (isFormValid) {
+            // If form is valid and not PhonePay, submit the order
+            alert("Order Submitted Successfully!");
+            closeOrderForm(); // Close the modal
+        } else {
+            // If form is invalid, notify the user
+            alert("Please fill in all required fields.");
+        }
+    }
+</script>
+</body>
+</html>
